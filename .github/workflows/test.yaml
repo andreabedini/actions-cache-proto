@@ -1,0 +1,19 @@
+name: test
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: jdx/mise-action@v2
+      - run: |
+          shopt -s globstar
+          for n in results/**/*.ts; do
+            curl --silent https://raw.githubusercontent.com/actions/toolkit/refs/heads/main/packages/cache/src/generated/$n | difft $n -
+          done
